@@ -50,7 +50,7 @@ class ForgetPasswordPage extends StatelessWidget {
                             height: 50,
                             child: RaisedButton(
                               child: Text('再設定する'),
-                              color: Color(0xFFF39800),
+                              color: Color(0xFF4CAF50),
                               textColor: Colors.white,
                               onPressed: model.isMailValid
                                   ? () async {
@@ -80,7 +80,7 @@ class ForgetPasswordPage extends StatelessWidget {
                             child: Text(
                               'ログイン画面に戻る',
                             ),
-                            textColor: Color(0xFFF39800),
+                            textColor: Color(0xFF4CAF50),
                             onPressed: () {
                               Navigator.pushReplacement(
                                 context,

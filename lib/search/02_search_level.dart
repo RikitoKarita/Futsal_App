@@ -7,7 +7,6 @@ import './../common/01_will_pop_scope.dart';
 import './../common/01_convert_weekday_name.dart';
 import 'package:provider/provider.dart';
 import '01_search_level_model.dart';
-import 'package:vibrate/vibrate.dart';
 
 class SearchLevel extends StatelessWidget {
   @override
@@ -155,7 +154,7 @@ class SearchLevel extends StatelessWidget {
                                       !model.isLoading) {
                                     model.canReload = false;
                                     model.showReloadWidget = true;
-                                     Vibrate.feedback(FeedbackType.medium);
+                                     // Vibrate.feedback(FeedbackType.medium);
                                     model.loadPublicFootsalBatol();
                                   }
                                 }

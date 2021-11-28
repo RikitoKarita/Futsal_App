@@ -4,7 +4,7 @@ import './../common/01_text_dialog.dart';
 import './../common/01_will_pop_scope.dart';
 import './01_password_forget_page.dart';
 import './01_signin_model.dart';
-import './../signup/02.signup.dart';
+import './../signup/02.signup1.dart';
 import './../02_home.dart';
 
 class SignInPage extends StatelessWidget {
@@ -35,9 +35,9 @@ class SignInPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 SizedBox(
-                                  width: 96,
+                                  width: 120,
                                   child:
-                                  Image.asset('lib/assets/friendsTree.jpg'),
+                                  Image.asset('lib/assets/FriendsTree.png'),
                                 ),
                               ],
                             ),
@@ -84,7 +84,7 @@ class SignInPage extends StatelessWidget {
                               height: 50,
                               child: RaisedButton(
                                 child: Text('ログイン'),
-                                color: Color(0xFFF39800),
+                                color: Color(0xFF4CAF50),
                                 textColor: Colors.white,
                                 onPressed: model.isMailValid &&
                                     model.isPasswordValid
@@ -113,7 +113,7 @@ class SignInPage extends StatelessWidget {
                               child: Text(
                                 '新規登録はこちら',
                               ),
-                              textColor: Color(0xFFF39800),
+                              textColor: Color(0xFF4CAF50),
                               onPressed: () {
                                 Navigator.pushReplacement(
                                   context,

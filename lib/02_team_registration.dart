@@ -31,8 +31,10 @@ class _TeamRState extends State<TeamR> {
               child: TextField(
                 controller: teamIdCtl,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                  icon: Icon(Icons.face),
+                  hintText: 'チームIDを入力してください',
                   labelText: 'チームID',
+                  border: OutlineInputBorder(),
                 ),
               )
           ),
