@@ -19,9 +19,9 @@ class SignUpModel extends ChangeNotifier {
     this.isConfirmValid = false;
     // this.userCredential = null;
     this.isGuestAllowed = false;
-    this.teamPass = '';
+    // this.teamPass = '';
     this.teamName = '';
-    this.memberName = '';
+    // this.memberName = '';
     this.level = '';
     this.activeLocation = '';
     this.mission = '';
@@ -42,9 +42,9 @@ class SignUpModel extends ChangeNotifier {
   late bool isConfirmValid;
   late UserCredential userCredential;
   late bool isGuestAllowed;
-  late String teamPass;
+  // late String teamPass;
   late String teamName;
-  late String memberName;
+  // late String memberName;
   late String level;
   late String activeLocation;
   late String mission;
@@ -95,9 +95,9 @@ class SignUpModel extends ChangeNotifier {
       // user ドキュメントのフィールド
       Map<String, dynamic> _userFields = {
         'TEAM_ID': this.userCredential.user!.uid,
-        'TEAM_PASS': this.teamPass,
+        'TEAM_PASS': this.password,
         'TEAM_NAME': this.teamName,
-        'MEMBER_NAME': this.memberName,
+        // 'MEMBER_NAME': this.memberName,
         'LEVEL' : this.level,
         'ACTIVE_LOCATION': this.activeLocation,
         'MISSION': this.mission,
@@ -179,4 +179,11 @@ class SignUpModel extends ChangeNotifier {
     this.isLoading = false;
     notifyListeners();
   }
+  Future passWordCheck(
+      ) async {
+    if (this.password != this.confirm) {
+      throw ('パスワードが一致しません。');
+    }
+  }
+
 }

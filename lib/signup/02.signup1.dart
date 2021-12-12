@@ -13,12 +13,6 @@ class SignUpPage extends StatelessWidget {
   final mailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmController = TextEditingController();
-  var teamNameCtl = TextEditingController();
-  var memberNameCtl = TextEditingController();
-  var levelCtl = TextEditingController();
-  var activeLocationCtl = TextEditingController();
-  var missionCtl = TextEditingController();
-  var addressCtl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +25,12 @@ class SignUpPage extends StatelessWidget {
               preferredSize: Size.fromHeight(40.0),
               child: AppBar(
                 centerTitle: true,
-                title: Text('アカウントを作成する',style: TextStyle(fontSize: 18,),),
+                title: Text(
+                  'アカウントを作成する',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
               ),
             ),
             body: Consumer<SignUpModel>(
@@ -46,26 +45,50 @@ class SignUpPage extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.check_circle,color: Colors.green,),
-                                Text('ステップ1',style: TextStyle(fontSize: 16,),)
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                ),
+                                Text(
+                                  'ステップ1',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                )
                               ],
                             ),
                             Container(
-                              padding: EdgeInsets.fromLTRB(10,20,10,40),
+                              padding: EdgeInsets.fromLTRB(10, 20, 10, 40),
                             ),
                             Row(
                               children: [
-                                Icon(Icons.check_circle,color: Colors.grey,),
-                                Text('ステップ2',style: TextStyle(fontSize: 16,),)
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'ステップ2',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                )
                               ],
                             ),
                             Container(
-                              padding: EdgeInsets.fromLTRB(10,20,10,40),
+                              padding: EdgeInsets.fromLTRB(10, 20, 10, 40),
                             ),
                             Row(
                               children: [
-                                Icon(Icons.check_circle,color: Colors.grey,),
-                                Text('ステップ3',style: TextStyle(fontSize: 16,),)
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'ステップ3',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                )
                               ],
                             ),
                           ],
@@ -136,35 +159,66 @@ class SignUpPage extends StatelessWidget {
                                         height: 16,
                                       ),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           FloatingActionButton.extended(
                                             label: Text('戻る'),
-                                            backgroundColor: const Color(0xFF9E9E9E),
-                                            onPressed: () {
-                                                  Navigator.pushReplacement(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) => SignInPage(),
-                                                    ),
-                                                  );
-                                            },
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.fromLTRB(10,20,40,40),
-                                          ),
-                                          FloatingActionButton.extended(
-                                            label: Text('次へ'),
-                                            backgroundColor: const Color(0xFF4CAF50),
+                                            backgroundColor:
+                                                const Color(0xFF9E9E9E),
                                             onPressed: () {
                                               Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => SignUpPage2(),
+                                                  builder: (context) =>
+                                                      SignInPage(),
                                                 ),
                                               );
                                             },
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.fromLTRB(
+                                                10, 20, 40, 40),
+                                          ),
+                                          FloatingActionButton.extended(
+                                            label: Text('次へ'),
+                                            backgroundColor:
+                                                const Color(0xFF4CAF50),
+                                            onPressed: model.isMailValid &&
+                                                    model.isPasswordValid &&
+                                                    model.isConfirmValid
+                                                ? () async {
+                                                    String mail =
+                                                        mailController.text;
+                                                    String password =
+                                                        passwordController.text;
+                                                    String confirm =
+                                                        confirmController.text;
+                                                    model.mail = mail;
+                                                    model.password = password;
+                                                    model.confirm = confirm;
+                                                    try {
+                                                      await model.passWordCheck();
+                                                      Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              SignUpPage2(
+                                                                  mail,
+                                                                  password,
+                                                                  confirm),
+                                                        ),
+                                                      );
+                                                      model.endLoading();
+                                                    } catch (e) {
+                                                      showTextDialog(
+                                                          context, e);
+                                                      model.endLoading();
+                                                    }
+                                                  }
+                                                : null,
                                           ),
                                         ],
                                       ),
@@ -360,7 +414,7 @@ class SignUpPage extends StatelessWidget {
                       ],
                     ),
                     // model.showingDialog
-                        // ? Container(
+                    // ? Container(
                     //                         //     color: Colors.black.withOpacity(0.5),
                     //                         //     child: Center(
                     //                         //       child: Container(

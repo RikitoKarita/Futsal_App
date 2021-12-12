@@ -8,25 +8,36 @@ import './../signin/02_signin.dart';
 import './01_signup_model.dart';
 import './02.signup1.dart';
 import './02.signup3.dart';
-import './../02_subscription.dart';
-import './../02_subscription.dart';
+import '../subscription/02_subscription.dart';
+import '../subscription/02_subscription.dart';
 
 class SignUpPage2 extends StatefulWidget {
-  // final mailController = TextEditingController();
-  // final passwordController = TextEditingController();
-  // final confirmController = TextEditingController();
-  // var teamNameCtl = TextEditingController();
-  // var memberNameCtl = TextEditingController();
-  // var levelCtl = TextEditingController();
-  // var activeLocationCtl = TextEditingController();
-  // var missionCtl = TextEditingController();
-  // var addressCtl = TextEditingController();
+  //ページ1より取得
+  late String mail;
+  late String password;
+  late String confirm;
+
+  SignUpPage2(this.mail, this.password, this.confirm);
+
   @override
   _SignUpPage2State createState() => _SignUpPage2State();
 }
 
 class _SignUpPage2State extends State<SignUpPage2> {
-  String batolDateTime = "選択してください";
+  String dropdownValue = "チームを選択してください";
+  var teamNameCtl = TextEditingController();
+  var missionCtl = TextEditingController();
+
+  //ページ1より
+  late String mail;
+  late String password;
+  late String confirm;
+
+  void initState() {
+    mail = widget.mail;
+    password = widget.password;
+    confirm = widget.confirm;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +50,12 @@ class _SignUpPage2State extends State<SignUpPage2> {
               preferredSize: Size.fromHeight(40.0),
               child: AppBar(
                 centerTitle: true,
-                title: Text('アカウントを作成する',style: TextStyle(fontSize: 18,),),
+                title: Text(
+                  'アカウントを作成する',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
               ),
             ),
             body: Consumer<SignUpModel>(
@@ -54,26 +70,50 @@ class _SignUpPage2State extends State<SignUpPage2> {
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.check_circle,color: Colors.grey,),
-                                Text('ステップ1',style: TextStyle(fontSize: 16,),)
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'ステップ1',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                )
                               ],
                             ),
                             Container(
-                              padding: EdgeInsets.fromLTRB(10,20,10,40),
+                              padding: EdgeInsets.fromLTRB(10, 20, 10, 40),
                             ),
                             Row(
                               children: [
-                                Icon(Icons.check_circle,color: Colors.green,),
-                                Text('ステップ2',style: TextStyle(fontSize: 16,),)
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                ),
+                                Text(
+                                  'ステップ2',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                )
                               ],
                             ),
                             Container(
-                              padding: EdgeInsets.fromLTRB(10,20,10,40),
+                              padding: EdgeInsets.fromLTRB(10, 20, 10, 40),
                             ),
                             Row(
                               children: [
-                                Icon(Icons.check_circle,color: Colors.grey,),
-                                Text('ステップ3',style: TextStyle(fontSize: 16,),)
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'ステップ3',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                )
                               ],
                             ),
                           ],
@@ -88,7 +128,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                     // mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       TextFormField(
-                                        // controller: teamNameCtl,
+                                        controller: teamNameCtl,
                                         maxLines: 1,
                                         style: TextStyle(fontSize: 16),
                                         decoration: InputDecoration(
@@ -109,41 +149,81 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                         width: 400,
                                         child: Row(
                                           children: [
-                                            Container(padding: EdgeInsets.all(5),),
-                                            TeamLeavelWidget(),
-                                            Container(padding: EdgeInsets.all(10),),
+                                            Container(
+                                              padding: EdgeInsets.all(5),
+                                            ),
+                                            Container(
+                                              child: DropdownButton<String>(
+                                                value: dropdownValue,
+                                                elevation: 16,
+                                                style: const TextStyle(
+                                                    color: Colors.black),
+                                                onChanged: (String? newValue) {
+                                                  setState(() {
+                                                    dropdownValue = newValue!;
+                                                  });
+                                                },
+                                                items: <String>[
+                                                  'チームを選択してください',
+                                                  'lev.1',
+                                                  'lev.2',
+                                                  'lev.3',
+                                                  'lev.4',
+                                                  'lev.5'
+                                                ].map<DropdownMenuItem<String>>(
+                                                    (String value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: value,
+                                                    child: Text(
+                                                      value,
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          color:
+                                                              Colors.black54),
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.all(10),
+                                            ),
                                             TextButton(
                                               onPressed: () {
                                                 showDialog(
                                                     context: context,
                                                     builder: (_) => AlertDialog(
-                                                      content:
-                                                      SingleChildScrollView(
-                                                        child: ListBody(
-                                                          children: const <
-                                                              Widget>[
-                                                            Text('Lev.1： 初心者のみ'),
-                                                            Text(
-                                                                'Lev.2： 初心者(多)＆経験者(少)'),
-                                                            Text(
-                                                                'Lev.3： 初心者(少)＆経験者(多)'),
-                                                            Text('Lev.4： 経験者のみ'),
-                                                            Text(
-                                                                'Lev.5： 経験者のみ（上級）'),
+                                                          content:
+                                                              SingleChildScrollView(
+                                                            child: ListBody(
+                                                              children: const <
+                                                                  Widget>[
+                                                                Text(
+                                                                    'Lev.1： 初心者のみ'),
+                                                                Text(
+                                                                    'Lev.2： 初心者(多)＆経験者(少)'),
+                                                                Text(
+                                                                    'Lev.3： 初心者(少)＆経験者(多)'),
+                                                                Text(
+                                                                    'Lev.4： 経験者のみ'),
+                                                                Text(
+                                                                    'Lev.5： 経験者のみ（上級）'),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          actions: <Widget>[
+                                                            TextButton(
+                                                              child: const Text(
+                                                                  '閉じる'),
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                            ),
                                                           ],
-                                                        ),
-                                                      ),
-                                                      actions: <Widget>[
-                                                        TextButton(
-                                                          child:
-                                                          const Text('閉じる'),
-                                                          onPressed: () {
-                                                            Navigator.of(context)
-                                                                .pop();
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ));
+                                                        ));
                                               },
                                               child: Text(
                                                 '詳細',
@@ -155,7 +235,9 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                           ],
                                         ),
                                       ),
-                                      Container(padding: EdgeInsets.all(10),),
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                      ),
                                       Container(
                                         decoration: BoxDecoration(
                                           border: Border.all(
@@ -166,7 +248,9 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                         width: 400,
                                         child: Row(
                                           children: [
-                                            Container(padding: EdgeInsets.all(5),),
+                                            Container(
+                                              padding: EdgeInsets.all(5),
+                                            ),
                                             Container(
                                               child: TextButton(
                                                 onPressed: () {
@@ -187,7 +271,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                         height: 16,
                                       ),
                                       TextFormField(
-                                        // controller: missionCtl,
+                                        controller: missionCtl,
                                         maxLines: 1,
                                         style: TextStyle(fontSize: 16),
                                         decoration: InputDecoration(
@@ -197,32 +281,49 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                         ),
                                       ),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           FloatingActionButton.extended(
                                             label: Text('戻る'),
-                                            backgroundColor: const Color(0xFF9E9E9E),
+                                            backgroundColor:
+                                                const Color(0xFF9E9E9E),
                                             onPressed: () {
                                               Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => SignUpPage(),
+                                                  builder: (context) =>
+                                                      SignUpPage(),
                                                 ),
                                               );
                                             },
                                           ),
                                           Container(
-                                            padding: EdgeInsets.fromLTRB(10,20,40,40),
+                                            padding: EdgeInsets.fromLTRB(
+                                                10, 20, 40, 40),
                                           ),
                                           FloatingActionButton.extended(
                                             label: Text('次へ'),
-                                            backgroundColor: const Color(0xFF4CAF50),
+                                            backgroundColor:
+                                                const Color(0xFF4CAF50),
                                             onPressed: () {
+                                              String teamName =
+                                                  teamNameCtl.text;
+                                              String mission = missionCtl.text;
                                               Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => SignUpPage3(),
+                                                  builder: (context) =>
+                                                      SignUpPage3(
+                                                          mail,
+                                                          password,
+                                                          confirm,
+                                                          teamName,
+                                                          dropdownValue,
+                                                          _selectedLocation,
+                                                          mission),
                                                 ),
                                               );
                                             },
@@ -245,6 +346,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
           )),
     );
   }
+
   void _showModalPicker(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
@@ -332,37 +434,43 @@ class _SignUpPage2State extends State<SignUpPage2> {
   }
 }
 
-class TeamLeavelWidget extends StatefulWidget {
-  const TeamLeavelWidget({Key? key}) : super(key: key);
-
-  @override
-  State<TeamLeavelWidget> createState() => _TeamLeavelWidgetState();
-}
+// class TeamLeavelWidget extends StatefulWidget {
+//   const TeamLeavelWidget({Key? key}) : super(key: key);
+//
+//   @override
+//   State<TeamLeavelWidget> createState() => _TeamLeavelWidgetState();
+// }
 
 /// This is the private State class that goes with MyStatefulWidget.
-class _TeamLeavelWidgetState extends State<TeamLeavelWidget> {
-  String dropdownValue = 'チームを選択してください';
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: dropdownValue,
-      elevation: 16,
-      style: const TextStyle(color: Colors.black),
-      onChanged: (String? newValue) {
-        setState(() {
-          dropdownValue = newValue!;
-        });
-      },
-      items: <String>['チームを選択してください', 'lev.1', 'lev.2', 'lev.3', 'lev.4', 'lev.5']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value,style: TextStyle(fontSize: 16,color: Colors.black54),),
-        );
-      }).toList(),
-    );
-  }
-}
-
-
+// class _TeamLeavelWidgetState extends State<TeamLeavelWidget> {
+//   String dropdownValue = 'チームを選択してください';
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return DropdownButton<String>(
+//       value: dropdownValue,
+//       elevation: 16,
+//       style: const TextStyle(color: Colors.black),
+//       onChanged: (String? newValue) {
+//         setState(() {
+//           dropdownValue = newValue!;
+//         });
+//       },
+//       items: <String>[
+//         'チームを選択してください',
+//         'lev.1',
+//         'lev.2',
+//         'lev.3',
+//         'lev.4',
+//         'lev.5'
+//       ]
+//           .map<DropdownMenuItem<String>>((String value) {
+//         return DropdownMenuItem<String>(
+//           value: value,
+//           child: Text(
+//             value, style: TextStyle(fontSize: 16, color: Colors.black54),),
+//         );
+//       }).toList(),
+//     );
+//   }
+// }

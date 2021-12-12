@@ -10,15 +10,19 @@ import './../02_home.dart';
 import './../user_policy/01_user_policy_page.dart';
 
 class SignUpPage3 extends StatelessWidget {
-  final mailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmController = TextEditingController();
-  var teamNameCtl = TextEditingController();
-  var memberNameCtl = TextEditingController();
-  var levelCtl = TextEditingController();
-  var activeLocationCtl = TextEditingController();
-  var missionCtl = TextEditingController();
   var addressCtl = TextEditingController();
+
+  //ページ1より取得
+  late String mail;
+  late String password;
+  late String confirm;
+  late String teamName;
+  late String mission;
+  late String teamLevel;
+  late String activeLocation;
+
+  SignUpPage3(this.mail, this.password, this.confirm, this.teamName,
+      this.teamLevel, this.activeLocation, this.mission);
 
   @override
   Widget build(BuildContext context) {
@@ -116,12 +120,18 @@ class SignUpPage3 extends StatelessWidget {
                                           border: OutlineInputBorder(),
                                         ),
                                       ),
-                                      Text('本アプリ利用者には、上記の連絡先が公開されます。\n'
-                                          '公開しても問題ないアカウントをご使用ください。\n'
-                                          'ex）Twitter「@StreeFriend」,Instagram「_friendstree_」\n'
-                                          ''
-                                        ,style: TextStyle(fontSize: 14,color: Colors.red),),
-                                      Container(padding: EdgeInsets.fromLTRB(5,5,5,5),),
+                                      Text(
+                                        '本アプリ利用者には、上記の連絡先が公開されます。\n'
+                                        '公開しても問題ないアカウントをご使用ください。\n'
+                                        'ex）Twitter「@StreeFriend」,Instagram「_friendstree_」\n'
+                                        '',
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.red),
+                                      ),
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                      ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
@@ -190,24 +200,18 @@ class SignUpPage3 extends StatelessWidget {
                                           child: Text('新規登録'),
                                           color: Color(0xFF4CAF50),
                                           textColor: Colors.white,
-                                          onPressed: model.agreeGuideline &&
-                                                  model.isMailValid &&
-                                                  model.isPasswordValid &&
-                                                  model.isConfirmValid
+                                          onPressed: model.agreeGuideline
                                               ? () async {
                                                   model.startLoading();
                                                   try {
-                                                    model.teamPass =
-                                                        passwordController.text;
-                                                    model.teamName =
-                                                        teamNameCtl.text;
-                                                    model.memberName =
-                                                        memberNameCtl.text;
-                                                    model.level = levelCtl.text;
+                                                    model.mail = mail;
+                                                    model.password = password;
+                                                    model.confirm = confirm;
+                                                    model.teamName = teamName;
+                                                    model.level = teamLevel;
                                                     model.activeLocation =
-                                                        activeLocationCtl.text;
-                                                    model.mission =
-                                                        missionCtl.text;
+                                                        activeLocation;
+                                                    model.mission = mission;
                                                     model.address =
                                                         addressCtl.text;
 
