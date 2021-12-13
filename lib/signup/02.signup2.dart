@@ -16,27 +16,51 @@ class SignUpPage2 extends StatefulWidget {
   late String mail;
   late String password;
   late String confirm;
+  //ページ3より取得
+  late String address;
+ //ページ2で利用
+  late String teamName;
+  late String mission;
+  String teamLevelValue = 'チームレベルを選択してください';
+  String activeLocation = '主な活動場所を選択してください';
+  var teamNameCtl = TextEditingController();
+  var missionCtl = TextEditingController();
 
-  SignUpPage2(this.mail, this.password, this.confirm);
+  SignUpPage2(this.mail, this.password, this.confirm, this.teamName,
+      this.teamLevelValue, this.activeLocation, this.mission,this.address){
+    this.teamNameCtl = TextEditingController(text: this.teamName);
+    this.missionCtl = TextEditingController(text: this.mission);
+  }
 
   @override
   _SignUpPage2State createState() => _SignUpPage2State();
 }
 
 class _SignUpPage2State extends State<SignUpPage2> {
-  String dropdownValue = "チームを選択してください";
-  var teamNameCtl = TextEditingController();
-  var missionCtl = TextEditingController();
-
   //ページ1より
   late String mail;
   late String password;
   late String confirm;
+  //ページ3より
+  late String address;
+  //ページ2より
+  late String teamLevelValue;
+  late String activeLocation;
+  var teamNameCtl = TextEditingController();
+  var missionCtl = TextEditingController();
 
   void initState() {
+    //ページ1より
     mail = widget.mail;
     password = widget.password;
     confirm = widget.confirm;
+    //ページ3より
+    address = widget.address;
+    //ページ2より
+    teamNameCtl = widget.teamNameCtl;
+    teamLevelValue = widget.teamLevelValue;
+    activeLocation = widget.activeLocation;
+    missionCtl = widget.missionCtl;
   }
 
   @override
@@ -129,9 +153,15 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                     children: <Widget>[
                                       TextFormField(
                                         controller: teamNameCtl,
+                                        onChanged: (text) {
+                                          model.changeTeamName(text);
+                                        },
                                         maxLines: 1,
                                         style: TextStyle(fontSize: 16),
                                         decoration: InputDecoration(
+                                          errorText: model.errorTeamName == ''
+                                              ? null
+                                              : model.errorTeamName,
                                           labelText: 'チーム名',
                                           border: OutlineInputBorder(),
                                         ),
@@ -154,17 +184,17 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                             ),
                                             Container(
                                               child: DropdownButton<String>(
-                                                value: dropdownValue,
+                                                value: teamLevelValue,
                                                 elevation: 16,
                                                 style: const TextStyle(
                                                     color: Colors.black),
                                                 onChanged: (String? newValue) {
                                                   setState(() {
-                                                    dropdownValue = newValue!;
+                                                    teamLevelValue = newValue!;
                                                   });
                                                 },
                                                 items: <String>[
-                                                  'チームを選択してください',
+                                                  'チームレベルを選択してください',
                                                   'lev.1',
                                                   'lev.2',
                                                   'lev.3',
@@ -257,7 +287,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                                   _showModalPicker(context);
                                                 },
                                                 child: Text(
-                                                  _selectedLocation,
+                                                  activeLocation,
                                                   style: TextStyle(
                                                       fontSize: 16,
                                                       color: Colors.black54),
@@ -272,9 +302,15 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                       ),
                                       TextFormField(
                                         controller: missionCtl,
+                                        onChanged: (text) {
+                                          model.changeMission(text);
+                                        },
                                         maxLines: 1,
                                         style: TextStyle(fontSize: 16),
                                         decoration: InputDecoration(
+                                          errorText: model.errorMission == ''
+                                              ? null
+                                              : model.errorMission,
                                           labelText: 'チーム目標',
                                           hintText: 'とにかく楽しくやることがモットーです',
                                           border: OutlineInputBorder(),
@@ -291,11 +327,19 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                             backgroundColor:
                                                 const Color(0xFF9E9E9E),
                                             onPressed: () {
+                                              String teamName = teamNameCtl.text;
+                                              String mission = missionCtl.text;
+
                                               Navigator.pushReplacement(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      SignUpPage(),
+                                                      SignUpPage.modoru(mail,
+                                                          password, confirm,
+                                                          teamName,
+                                                          teamLevelValue,
+                                                          activeLocation,
+                                                          mission,address),
                                                 ),
                                               );
                                             },
@@ -312,20 +356,33 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                               String teamName =
                                                   teamNameCtl.text;
                                               String mission = missionCtl.text;
-                                              Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SignUpPage3(
-                                                          mail,
-                                                          password,
-                                                          confirm,
-                                                          teamName,
-                                                          dropdownValue,
-                                                          _selectedLocation,
-                                                          mission),
-                                                ),
-                                              );
+                                              model.changeTeamName(teamName);
+                                              model.changeMission(mission);
+                                              if (model.isTeamNameValid &&
+                                                  model.isMissionValid &&
+                                                  teamLevelValue !=
+                                                      "チームレベルを選択してください" &&
+                                                  activeLocation !=
+                                                      '主な活動場所を選択してください') {
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SignUpPage3(
+                                                            mail,
+                                                            password,
+                                                            confirm,
+                                                            teamName,
+                                                            teamLevelValue,
+                                                            activeLocation,
+                                                            mission,address),
+                                                  ),
+                                                );
+                                              } else {
+                                                showTextDialog(context,
+                                                    "全ての項目を正しく入力してください");
+                                                model.endLoading();
+                                              }
                                             },
                                           ),
                                         ],
@@ -367,8 +424,6 @@ class _SignUpPage2State extends State<SignUpPage2> {
       },
     );
   }
-
-  String _selectedLocation = '主な活動場所を選択してください';
 
   final List<String> _Location = [
     "北海道",
@@ -429,48 +484,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
 
   void _onSelectedLocationChanged(int index) {
     setState(() {
-      _selectedLocation = _Location[index];
+      activeLocation = _Location[index];
     });
   }
 }
-
-// class TeamLeavelWidget extends StatefulWidget {
-//   const TeamLeavelWidget({Key? key}) : super(key: key);
-//
-//   @override
-//   State<TeamLeavelWidget> createState() => _TeamLeavelWidgetState();
-// }
-
-/// This is the private State class that goes with MyStatefulWidget.
-// class _TeamLeavelWidgetState extends State<TeamLeavelWidget> {
-//   String dropdownValue = 'チームを選択してください';
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return DropdownButton<String>(
-//       value: dropdownValue,
-//       elevation: 16,
-//       style: const TextStyle(color: Colors.black),
-//       onChanged: (String? newValue) {
-//         setState(() {
-//           dropdownValue = newValue!;
-//         });
-//       },
-//       items: <String>[
-//         'チームを選択してください',
-//         'lev.1',
-//         'lev.2',
-//         'lev.3',
-//         'lev.4',
-//         'lev.5'
-//       ]
-//           .map<DropdownMenuItem<String>>((String value) {
-//         return DropdownMenuItem<String>(
-//           value: value,
-//           child: Text(
-//             value, style: TextStyle(fontSize: 16, color: Colors.black54),),
-//         );
-//       }).toList(),
-//     );
-//   }
-// }

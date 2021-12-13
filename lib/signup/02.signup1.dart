@@ -9,10 +9,66 @@ import './02.signup2.dart';
 import './../02_home.dart';
 import './../user_policy/01_user_policy_page.dart';
 
-class SignUpPage extends StatelessWidget {
-  final mailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmController = TextEditingController();
+class SignUpPage extends StatefulWidget {
+  //ページ1より取得
+  var mailController = TextEditingController();
+  var passwordController = TextEditingController();
+  var confirmController = TextEditingController();
+  late String mail;
+  late String password;
+  late String confirm;
+  //ページ2より取得
+  String teamName = '';
+  String mission = '';
+  String teamLevelValue = 'チームレベルを選択してください';
+  String activeLocation = '主な活動場所を選択してください';
+  //ページ3より取得
+  String address = '';
+
+  SignUpPage.make(){
+    mail = "";
+    password = "";
+    confirm = "";
+  }
+
+  SignUpPage.modoru(this.mail, this.password, this.confirm, this.teamName, this.teamLevelValue, this.activeLocation, this.mission, this.address){
+    this.mailController = TextEditingController(text: this.mail);
+    this.passwordController = TextEditingController(text: this.password);
+    this.confirmController = TextEditingController(text: this.confirm);
+  }
+    @override
+    _SignUpPageState createState() => _SignUpPageState();
+}
+class _SignUpPageState extends State<SignUpPage> {
+  //ページ1より
+  var mailController = TextEditingController();
+  var passwordController = TextEditingController();
+  var confirmController = TextEditingController();
+  late String mail;
+  late String password;
+  late String confirm;
+  //ページ2より
+  late String teamName;
+  late String mission;
+  late String teamLevelValue;
+  late String activeLocation;
+
+  //ページ3より
+  late String address;
+
+  void initState() {
+    mailController = widget.mailController;
+    passwordController = widget.passwordController;
+    confirmController = widget.confirmController;
+    mail = widget.mail;
+    password = widget.password;
+    confirm = widget.confirm;
+    teamName = widget.teamName;
+    mission = widget.mission;
+    teamLevelValue = widget.teamLevelValue;
+    activeLocation = widget.activeLocation;
+    address = widget.address;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -186,10 +242,8 @@ class SignUpPage extends StatelessWidget {
                                             label: Text('次へ'),
                                             backgroundColor:
                                                 const Color(0xFF4CAF50),
-                                            onPressed: model.isMailValid &&
-                                                    model.isPasswordValid &&
-                                                    model.isConfirmValid
-                                                ? () async {
+                                            onPressed:
+                                                 () async {
                                                     String mail =
                                                         mailController.text;
                                                     String password =
@@ -199,211 +253,43 @@ class SignUpPage extends StatelessWidget {
                                                     model.mail = mail;
                                                     model.password = password;
                                                     model.confirm = confirm;
-                                                    try {
-                                                      await model.passWordCheck();
-                                                      Navigator.pushReplacement(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              SignUpPage2(
-                                                                  mail,
-                                                                  password,
-                                                                  confirm),
-                                                        ),
-                                                      );
-                                                      model.endLoading();
-                                                    } catch (e) {
+                                                    model.changeMail(mail);
+                                                    model.changePassword(password);
+                                                    model.changeConfirm(confirm);
+                                                    if(model.isMailValid && model.isPasswordValid && model.isConfirmValid) {
+                                                      try {
+                                                        await model
+                                                            .passWordCheck();
+                                                        Navigator
+                                                            .pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (
+                                                                context) =>
+                                                                SignUpPage2
+                                                                    (
+                                                                    mail,
+                                                                    password,
+                                                                    confirm,
+                                                                    teamName,
+                                                                    teamLevelValue,activeLocation,mission,address),
+                                                          ),
+                                                        );
+                                                        model.endLoading();
+                                                      } catch (e) {
+                                                        showTextDialog(
+                                                            context, e);
+                                                        model.endLoading();
+                                                      }
+                                                    }else{
                                                       showTextDialog(
-                                                          context, e);
+                                                          context, "メール又はパスワードを正しく入力してください");
                                                       model.endLoading();
                                                     }
                                                   }
-                                                : null,
                                           ),
                                         ],
                                       ),
-                                      // TextFormField(
-                                      //   controller: teamNameCtl,
-                                      //   maxLines: 1,
-                                      //   decoration: InputDecoration(
-                                      //     labelText: 'チーム名',
-                                      //     border: OutlineInputBorder(),
-                                      //   ),
-                                      // ),
-                                      // SizedBox(
-                                      //   height: 16,
-                                      // ),
-                                      // TextFormField(
-                                      //   controller: memberNameCtl,
-                                      //   maxLines: 1,
-                                      //   decoration: InputDecoration(
-                                      //     labelText: '所属メンバ',
-                                      //     border: OutlineInputBorder(),
-                                      //   ),
-                                      // ),
-                                      // SizedBox(
-                                      //   height: 16,
-                                      // ),
-                                      // TextFormField(
-                                      //   controller: levelCtl,
-                                      //   maxLines: 1,
-                                      //   decoration: InputDecoration(
-                                      //     labelText: 'チームレベル',
-                                      //     border: OutlineInputBorder(),
-                                      //   ),
-                                      // ),
-                                      // SizedBox(
-                                      //   height: 16,
-                                      // ),
-                                      // TextFormField(
-                                      //   controller: activeLocationCtl,
-                                      //   maxLines: 1,
-                                      //   decoration: InputDecoration(
-                                      //     labelText: '主な活動場所',
-                                      //     border: OutlineInputBorder(),
-                                      //   ),
-                                      // ),
-                                      // SizedBox(
-                                      //   height: 16,
-                                      // ),
-                                      // TextFormField(
-                                      //   controller: missionCtl,
-                                      //   maxLines: 1,
-                                      //   decoration: InputDecoration(
-                                      //     labelText: 'チーム目標',
-                                      //     border: OutlineInputBorder(),
-                                      //   ),
-                                      // ),
-                                      // SizedBox(
-                                      //   height: 16,
-                                      // ),
-                                      // TextFormField(
-                                      //   controller: addressCtl,
-                                      //   maxLines: 1,
-                                      //   decoration: InputDecoration(
-                                      //     labelText: '連絡先',
-                                      //     border: OutlineInputBorder(),
-                                      //   ),
-                                      // ),
-                                      // SizedBox(
-                                      //   height: 16,
-                                      // ),
-                                      // Row(
-                                      //   mainAxisAlignment: MainAxisAlignment.start,
-                                      //   children: [
-                                      //     SizedBox(
-                                      //       width: 24,
-                                      //       child: Checkbox(
-                                      //         activeColor: Color(0xFF4CAF50),
-                                      //         checkColor: Colors.white,
-                                      //         onChanged: (val) {
-                                      //           model.tapAgreeCheckBox(val);
-                                      //         },
-                                      //         value: model.agreeGuideline,
-                                      //       ),
-                                      //     ),
-                                      //     SizedBox(
-                                      //       width: 8,
-                                      //     ),
-                                      //     Flexible(
-                                      //       child: RichText(
-                                      //         text: TextSpan(
-                                      //           style: TextStyle(
-                                      //             color: Colors.grey,
-                                      //             fontSize: 12.0,
-                                      //             fontWeight: FontWeight.bold,
-                                      //           ),
-                                      //           children: [
-                                      //             TextSpan(
-                                      //               text: '利用規約',
-                                      //               style: TextStyle(
-                                      //                 color: Color(0xFF4CAF50),
-                                      //                 decoration:
-                                      //                 TextDecoration.underline,
-                                      //                 decorationThickness: 2.00,
-                                      //               ),
-                                      //               recognizer: TapGestureRecognizer()
-                                      //                 ..onTap = () {
-                                      //                   Navigator.push(
-                                      //                     context,
-                                      //                     MaterialPageRoute(
-                                      //                       builder: (context) =>
-                                      //                           UserPolicyPage(),
-                                      //                       fullscreenDialog: true,
-                                      //                     ),
-                                      //                   );
-                                      //                 },
-                                      //             ),
-                                      //             TextSpan(text: ' を読んで同意しました。'),
-                                      //           ],
-                                      //         ),
-                                      //       ),
-                                      //     ),
-                                      //   ],
-                                      // ),
-                                      // SizedBox(
-                                      //   height: 16,
-                                      // ),
-                                      // SizedBox(
-                                      //   width: double.infinity,
-                                      //   height: 50,
-                                      //   child: RaisedButton(
-                                      //     child: Text('新規登録'),
-                                      //     color: Color(0xFF4CAF50),
-                                      //     textColor: Colors.white,
-                                      //     onPressed: model.agreeGuideline &&
-                                      //         model.isMailValid &&
-                                      //         model.isPasswordValid &&
-                                      //         model.isConfirmValid
-                                      //         ? () async {
-                                      //       model.startLoading();
-                                      //       try {
-                                      //         model.teamPass =
-                                      //             passwordController.text;
-                                      //         model.teamName = teamNameCtl.text;
-                                      //         model.memberName =
-                                      //             memberNameCtl.text;
-                                      //         model.level = levelCtl.text;
-                                      //         model.activeLocation =
-                                      //             activeLocationCtl.text;
-                                      //         model.mission = missionCtl.text;
-                                      //         model.address = addressCtl.text;
-                                      //
-                                      //         await model.signUp();
-                                      //
-                                      //         await Navigator.pushReplacement(
-                                      //           context,
-                                      //           MaterialPageRoute(
-                                      //             builder: (context) => HomePage(
-                                      //                 user_id: model.userCredential.user!.uid),
-                                      //           ),
-                                      //         );
-                                      //         model.endLoading();
-                                      //       } catch (e) {
-                                      //         showTextDialog(context, e);
-                                      //         model.endLoading();
-                                      //       }
-                                      //     }
-                                      //         : null,
-                                      //   ),
-                                      // ),
-                                      // SizedBox(
-                                      //   height: 16,
-                                      // ),
-                                      // FlatButton(
-                                      //   child: Text(
-                                      //     'ログインはこちら',
-                                      //   ),
-                                      //   textColor: Color(0xFF4CAF50),
-                                      //   onPressed: () {
-                                      //     Navigator.pushReplacement(
-                                      //       context,
-                                      //       MaterialPageRoute(
-                                      //         builder: (context) => SignInPage(),
-                                      //       ),
-                                      //     );
-                                      //   },
-                                      // ),
                                     ],
                                   ),
                                 ),
@@ -413,92 +299,6 @@ class SignUpPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    // model.showingDialog
-                    // ? Container(
-                    //                         //     color: Colors.black.withOpacity(0.5),
-                    //                         //     child: Center(
-                    //                         //       child: Container(
-                    //                         //         padding: const EdgeInsets.all(16.0),
-                    //                         //         width: 300,
-                    //                         //         height: 250,
-                    //                         //         color: Colors.white,
-                    //                         //         child: Column(
-                    //                         //           mainAxisAlignment: MainAxisAlignment.center,
-                    //                         //           crossAxisAlignment: CrossAxisAlignment.center,
-                    //                         //           children: [
-                    //                         //             Row(
-                    //                         //               mainAxisAlignment:
-                    //                         //                   MainAxisAlignment.start,
-                    //                         //               children: [
-                    //                         //                 SizedBox(
-                    //                         //                   width: 24,
-                    //                         //                   child: Checkbox(
-                    //                         //                     activeColor: Color(0xFF4CAF50),
-                    //                         //                     checkColor: Colors.white,
-                    //                         //                     onChanged: (val) {
-                    //                         //                       model.tapAgreeCheckBox(val);
-                    //                         //                     },
-                    //                         //                     value: model.agreeGuideline,
-                    //                         //                   ),
-                    //                         //                 ),
-                    //                         //                 SizedBox(
-                    //                         //                   width: 8,
-                    //                         //                 ),
-                    //                         //                 Flexible(
-                    //                         //                   child: RichText(
-                    //                         //                     text: TextSpan(
-                    //                         //                       style: TextStyle(
-                    //                         //                         color: Colors.grey,
-                    //                         //                         fontSize: 12.0,
-                    //                         //                         fontWeight: FontWeight.bold,
-                    //                         //                       ),
-                    //                         //                       children: [
-                    //                         //                         TextSpan(
-                    //                         //                           text: '利用規約',
-                    //                         //                           style: TextStyle(
-                    //                         //                             color: Color(0xFF4CAF50),
-                    //                         //                             decoration: TextDecoration
-                    //                         //                                 .underline,
-                    //                         //                             decorationThickness: 2.00,
-                    //                         //                           ),
-                    //                         //                           recognizer:
-                    //                         //                               TapGestureRecognizer()
-                    //                         //                                 ..onTap = () {
-                    //                         //                                   Navigator.push(
-                    //                         //                                     context,
-                    //                         //                                     MaterialPageRoute(
-                    //                         //                                       builder: (context) =>
-                    //                         //                                           UserPolicyPage(),
-                    //                         //                                       fullscreenDialog:
-                    //                         //                                           true,
-                    //                         //                                     ),
-                    //                         //                                   );
-                    //                         //                                 },
-                    //                         //                         ),
-                    //                         //                         TextSpan(text: ' を読んで同意しました。'),
-                    //                         //                       ],
-                    //                         //                     ),
-                    //                         //                   ),
-                    //                         //                 ),
-                    //                         //               ],
-                    //                         //             ),
-                    //                         //             SizedBox(
-                    //                         //               height: 16.0,
-                    //                         //             ),
-                    //                         //           ],
-                    //                         //         ),
-                    //                         //       ),
-                    //                         //     ),
-                    // // // //                         //   )
-                    // // //     : SizedBox(),
-                    // // // model.isLoading
-                    // // //     ? Container(
-                    // // //         color: Colors.black.withOpacity(0.3),
-                    // // //         child: Center(
-                    // // //           child: CircularProgressIndicator(),
-                    // // //         ),
-                    // //       )
-                    //     : SizedBox(),
                   ],
                 );
               },

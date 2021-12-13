@@ -11,18 +11,22 @@ import './../user_policy/01_user_policy_page.dart';
 
 class SignUpPage3 extends StatelessWidget {
   var addressCtl = TextEditingController();
+  late String address;
 
   //ページ1より取得
   late String mail;
   late String password;
   late String confirm;
+  //ページ2より取得
   late String teamName;
   late String mission;
   late String teamLevel;
   late String activeLocation;
 
   SignUpPage3(this.mail, this.password, this.confirm, this.teamName,
-      this.teamLevel, this.activeLocation, this.mission);
+      this.teamLevel, this.activeLocation, this.mission, this.address){
+    addressCtl = TextEditingController(text: this.address);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +118,14 @@ class SignUpPage3 extends StatelessWidget {
                                     children: <Widget>[
                                       TextFormField(
                                         controller: addressCtl,
+                                        onChanged: (text) {
+                                          model.changeAddress(text);
+                                        },
                                         maxLines: 1,
                                         decoration: InputDecoration(
+                                          errorText: model.errorAddress == ''
+                                              ? null
+                                              : model.errorAddress,
                                           labelText: '連絡先',
                                           border: OutlineInputBorder(),
                                         ),
@@ -203,41 +213,74 @@ class SignUpPage3 extends StatelessWidget {
                                           onPressed: model.agreeGuideline
                                               ? () async {
                                                   model.startLoading();
-                                                  try {
-                                                    model.mail = mail;
-                                                    model.password = password;
-                                                    model.confirm = confirm;
-                                                    model.teamName = teamName;
-                                                    model.level = teamLevel;
-                                                    model.activeLocation =
-                                                        activeLocation;
-                                                    model.mission = mission;
-                                                    model.address =
-                                                        addressCtl.text;
+                                                  model.changeAddress(addressCtl.text);
+                                                  if(model.isAddressValid) {
+                                                    try {
+                                                      model.mail = mail;
+                                                      model.password = password;
+                                                      model.confirm = confirm;
+                                                      model.teamName = teamName;
+                                                      model.level = teamLevel;
+                                                      model.activeLocation =
+                                                          activeLocation;
+                                                      model.mission = mission;
+                                                      model.address =
+                                                          addressCtl.text;
 
-                                                    await model.signUp();
+                                                      await model.signUp();
 
-                                                    await Navigator
-                                                        .pushReplacement(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            HomePage(
-                                                                user_id: model
-                                                                    .userCredential
-                                                                    .user!
-                                                                    .uid),
-                                                      ),
-                                                    );
-                                                    model.endLoading();
-                                                  } catch (e) {
-                                                    showTextDialog(context, e);
+                                                      await Navigator
+                                                          .pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              HomePage(
+                                                                  user_id: model
+                                                                      .userCredential
+                                                                      .user!
+                                                                      .uid),
+                                                        ),
+                                                      );
+                                                      model.endLoading();
+                                                    } catch (e) {
+                                                      showTextDialog(
+                                                          context, e);
+                                                      model.endLoading();
+                                                    }
+                                                  }else{
+                                                    showTextDialog(
+                                                        context, "連絡先を入力してください");
                                                     model.endLoading();
                                                   }
                                                 }
                                               : null,
                                         ),
                                       ),
+                                      SizedBox(
+                                        height: 16,
+                                      ),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 50,
+                                    child:
+                                      FlatButton(
+                                        child: Text(
+                                          '戻る',
+                                        ),
+                                        color: Color(0xFF4CAF50),
+                                        textColor: Colors.white,
+                                        onPressed: () {
+                                          address = addressCtl.text;
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SignUpPage2(this.mail, this.password, this.confirm, this.teamName,
+                                                      this.teamLevel, this.activeLocation, this.mission,this.address),
+                                            ),
+                                          );
+                                        },
+                                      ),),
                                       SizedBox(
                                         height: 16,
                                       ),

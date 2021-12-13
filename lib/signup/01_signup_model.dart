@@ -13,10 +13,16 @@ class SignUpModel extends ChangeNotifier {
     this.errorMail = '';
     this.errorPassword = '';
     this.errorConfirm = '';
+    this.errorTeamName = '';
+    this.errorMission = '';
+    this.errorAddress = '';
     this.isLoading = false;
     this.isMailValid = false;
     this.isPasswordValid = false;
     this.isConfirmValid = false;
+    this.isTeamNameValid = false;
+    this.isMissionValid = false;
+    this.isAddressValid = false;
     // this.userCredential = null;
     this.isGuestAllowed = false;
     // this.teamPass = '';
@@ -36,10 +42,16 @@ class SignUpModel extends ChangeNotifier {
   late String errorMail;
   late String errorPassword;
   late String errorConfirm;
+  late String errorTeamName;
+  late String errorMission;
+  late String errorAddress;
   late bool isLoading;
   late bool isMailValid;
   late bool isPasswordValid;
   late bool isConfirmValid;
+  late bool isTeamNameValid;
+  late bool isMissionValid;
+  late bool isAddressValid;
   late UserCredential userCredential;
   late bool isGuestAllowed;
   // late String teamPass;
@@ -154,6 +166,43 @@ class SignUpModel extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void changeTeamName(text) {
+    this.teamName = text.trim();
+    if (text.length == 0) {
+      this.isTeamNameValid = false;
+      this.errorTeamName = 'チーム名称を入力して下さい。';
+    } else {
+      this.isTeamNameValid = true;
+      this.errorTeamName = '';
+    }
+    notifyListeners();
+  }
+
+  void changeMission(text) {
+    this.mission = text.trim();
+    if (text.length == 0) {
+      this.isMissionValid = false;
+      this.errorMission = 'チーム目標を入力して下さい。';
+    } else {
+      this.isMissionValid = true;
+      this.errorMission = '';
+    }
+    notifyListeners();
+  }
+
+  void changeAddress(text) {
+    this.address = text.trim();
+    if (text.length == 0) {
+      this.isAddressValid = false;
+      this.errorAddress = '連絡先を入力して下さい。';
+    } else {
+      this.isAddressValid = true;
+      this.errorAddress = '';
+    }
+    notifyListeners();
+  }
+
 
   void tapAgreeCheckBox(val) {
     this.agreeGuideline = val;
