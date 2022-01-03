@@ -1,6 +1,4 @@
-//Now let's create the article details page
-
-import 'package:NewsApp/model/article_model.dart';
+import 'package:NewsApp/99_Others/model/article_model.dart';
 import 'package:flutter/material.dart';
 
 class ArticlePage extends StatelessWidget {

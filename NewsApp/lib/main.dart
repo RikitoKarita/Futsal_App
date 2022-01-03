@@ -1,7 +1,7 @@
-import 'package:NewsApp/services/api_service.dart';
+import 'package:NewsApp/99_Others/services/api_service.dart';
 import 'package:flutter/material.dart';
-import 'components/customListTile.dart';
-import 'model/article_model.dart';
+import '99_Others/components/customListTile.dart';
+import '99_Others/model/article_model.dart';
 
 void main() {
   runApp(MyApp());
