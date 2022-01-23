@@ -17,7 +17,7 @@ class SignUpPage2 extends StatefulWidget {
   late String password;
   late String confirm;
   //ページ3より取得
-  late String address;
+  late String image_path;
  //ページ2で利用
   late String teamName;
   late String mission;
@@ -27,7 +27,7 @@ class SignUpPage2 extends StatefulWidget {
   var missionCtl = TextEditingController();
 
   SignUpPage2(this.mail, this.password, this.confirm, this.teamName,
-      this.teamLevelValue, this.activeLocation, this.mission,this.address){
+      this.teamLevelValue, this.activeLocation, this.mission,this.image_path){
     this.teamNameCtl = TextEditingController(text: this.teamName);
     this.missionCtl = TextEditingController(text: this.mission);
   }
@@ -42,7 +42,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
   late String password;
   late String confirm;
   //ページ3より
-  late String address;
+  late String image_path;
   //ページ2より
   late String teamLevelValue;
   late String activeLocation;
@@ -55,7 +55,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
     password = widget.password;
     confirm = widget.confirm;
     //ページ3より
-    address = widget.address;
+    image_path = widget.image_path;
     //ページ2より
     teamNameCtl = widget.teamNameCtl;
     teamLevelValue = widget.teamLevelValue;
@@ -339,7 +339,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                                           teamName,
                                                           teamLevelValue,
                                                           activeLocation,
-                                                          mission,address),
+                                                          mission,image_path),
                                                 ),
                                               );
                                             },
@@ -375,7 +375,7 @@ class _SignUpPage2State extends State<SignUpPage2> {
                                                             teamName,
                                                             teamLevelValue,
                                                             activeLocation,
-                                                            mission,address),
+                                                            mission,image_path),
                                                   ),
                                                 );
                                               } else {

@@ -1,0 +1,100 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:futsal_develop/common/01_message.dart';
+import 'package:futsal_develop/common/01_team_talk_room.dart';
+import 'package:futsal_develop/utils/firestore.dart';
+import 'package:intl/intl.dart'as intl;
+
+class TeamTalkRoom extends StatefulWidget {
+  final TeamTalkRoomModel room;
+
+  TeamTalkRoom(this.room);
+
+  @override
+  _TeamTalkRoomState createState() => _TeamTalkRoomState();
+}
+
+class _TeamTalkRoomState extends State<TeamTalkRoom> {
+  List<Message> messageList = [];
+  TextEditingController controller = TextEditingController();
+  Future<void> getMessages()async{
+    messageList = await Firestore.getMessages(widget.room.roomId);
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.lightBlueAccent,
+        appBar: AppBar(
+          title: Text(widget.room.talkTeam.TEAM_NAME),
+        ),
+        body: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 60.0),
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: Firestore.messageSnapshot(widget.room.roomId),
+                  builder: (context, snapshot) {
+                    return FutureBuilder(
+                      future: getMessages(),
+                      builder:(context,snapshot){
+                        return  ListView.builder(
+                            physics: RangeMaintainingScrollPhysics(),
+                            shrinkWrap: true,
+                            reverse: true,
+                            itemCount: messageList.length,
+                            itemBuilder: (context,index){
+                              Message _message = messageList[index];
+                              DateTime sendtime = _message.sendTime.toDate();
+                              return Padding(
+                                padding: EdgeInsets.only(top:10.0,right: 10.0,left: 10, bottom: index == 0 ? 10.0 : 0.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  textDirection: messageList[index].isMe ? TextDirection.rtl :TextDirection.ltr,
+                                  children: [
+                                    Container(
+                                        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.6),
+                                        padding: EdgeInsets.symmetric(horizontal: 10.0,vertical: 6.0),
+                                        decoration: BoxDecoration(
+                                            color: messageList[index].isMe ? Colors.green : Colors.white,
+                                            borderRadius: BorderRadius.circular(20)
+                                        ),
+                                        child: Text(messageList[index].message)),
+                                    Text(intl.DateFormat('HH:mm').format(sendtime),style: TextStyle(fontSize: 12),)
+                                  ],
+                                ),
+                              );
+                            });
+                      },
+                    );
+                  }
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 60,color: Colors.white,
+                child: Row(
+                  children: [
+                    Expanded(child: TextField(
+                      controller: controller,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                    )),
+                    IconButton(icon: Icon(Icons.send), onPressed: () async{
+                      print("送信");
+                      if(controller.text.isNotEmpty){
+                        await Firestore.sendMessage(widget.room.roomId, controller.text);
+                        controller.clear();
+                      }
+                    },),
+                  ],
+                ),
+              ),
+            )
+          ],
+        )
+    );
+  }
+}

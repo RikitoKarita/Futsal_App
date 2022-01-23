@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import './../common/01_convert_error_message.dart';
 
 class SignUpModel extends ChangeNotifier {
@@ -22,7 +27,6 @@ class SignUpModel extends ChangeNotifier {
     this.isConfirmValid = false;
     this.isTeamNameValid = false;
     this.isMissionValid = false;
-    this.isAddressValid = false;
     // this.userCredential = null;
     this.isGuestAllowed = false;
     // this.teamPass = '';
@@ -31,7 +35,8 @@ class SignUpModel extends ChangeNotifier {
     this.level = '';
     this.activeLocation = '';
     this.mission = '';
-    this.address = '';
+    this.image_path = '';
+    this.date = '';
   }
 
   late bool agreeGuideline;
@@ -51,7 +56,6 @@ class SignUpModel extends ChangeNotifier {
   late bool isConfirmValid;
   late bool isTeamNameValid;
   late bool isMissionValid;
-  late bool isAddressValid;
   late UserCredential userCredential;
   late bool isGuestAllowed;
   // late String teamPass;
@@ -60,14 +64,12 @@ class SignUpModel extends ChangeNotifier {
   late String level;
   late String activeLocation;
   late String mission;
-  late String address;
-
+  XFile ? imageFile;
+  ImagePicker picker = ImagePicker();
+  String ? image_path;
+  late String date;
+  
   Future<void> init() async {
-    // DocumentSnapshot _doc = await FirebaseFirestore.instance
-    //     .collection('settings')
-    //     .doc('guest_mode')
-    //     .get();
-    // this.isGuestAllowed = _doc.data()['guest_allowed'];
     notifyListeners();
   }
 
@@ -101,29 +103,56 @@ class SignUpModel extends ChangeNotifier {
       WriteBatch _batch = _firestore.batch();
 
       // user ドキュメント
-      DocumentReference _userDoc =
+      DocumentReference _teamDoc =
           _firestore.collection('TEAM_TBL').doc(this.userCredential.user!.uid);
 
       // user ドキュメントのフィールド
-      Map<String, dynamic> _userFields = {
+      Map<String, dynamic> _teamFields = {
         'TEAM_ID': this.userCredential.user!.uid,
         'TEAM_PASS': this.password,
         'TEAM_NAME': this.teamName,
-        // 'MEMBER_NAME': this.memberName,
         'LEVEL' : this.level,
         'ACTIVE_LOCATION': this.activeLocation,
         'MISSION': this.mission,
-        'ADDRESS': this.address,
+        'IMAGE_PASS': this.image_path,
       };
 
-      _batch.set(_userDoc, _userFields);
+      _batch.set(_teamDoc, _teamFields);
       await _batch.commit();
+      uploadImage();
+      
     } catch (e) {
       print('ユーザードキュメントの作成中にエラー');
       print(e.toString());
       throw ('エラーが発生しました。');
     }
   }
+
+  Future<void>getImageFromGallery() async{
+    final pickedImage =
+    await ImagePicker().pickImage(source: ImageSource.gallery);
+    imageFile = (pickedImage != null ? XFile(pickedImage.path): null)!;
+    notifyListeners();
+  }
+
+  Future<String ?> uploadImage() async{
+    DateTime now = DateTime.now();
+    DateFormat outputFormat =
+    DateFormat('yyyy-MM-dd-HH:mm:ss');
+    this.date = outputFormat.format(now);
+    File imageFileHenkan = File(imageFile!.path);
+    final ref = FirebaseStorage.instance.ref('/myTeamProfile/${this.userCredential.user!.uid}/${this.date}.png');
+    final storedImage = await ref.putFile(imageFileHenkan);
+    image_path = await loadImage(storedImage);
+    return image_path;
+  }
+  
+  Future<String> loadImage(TaskSnapshot storedImage) async{
+    String downloadUrl = await storedImage.ref.getDownloadURL();
+    return downloadUrl;
+  }
+  
+  
 
   void changeMail(text) {
     this.mail = text.trim();
@@ -191,17 +220,17 @@ class SignUpModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeAddress(text) {
-    this.address = text.trim();
-    if (text.length == 0) {
-      this.isAddressValid = false;
-      this.errorAddress = '連絡先を入力して下さい。';
-    } else {
-      this.isAddressValid = true;
-      this.errorAddress = '';
-    }
-    notifyListeners();
-  }
+  // void changeAddress(text) {
+  //   this.image_path = text.trim();
+  //   if (text.length == 0) {
+  //     this.isAddressValid = false;
+  //     this.errorAddress = '連絡先を入力して下さい。';
+  //   } else {
+  //     this.isAddressValid = true;
+  //     this.errorAddress = '';
+  //   }
+  //   notifyListeners();
+  // }
 
 
   void tapAgreeCheckBox(val) {

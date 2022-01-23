@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:futsal_develop/talk_room/02_team_talk.dart';
+import 'batol_ticket/02_balol_ticket.dart';
 import 'subscription/02_subscription.dart';
 import 'search/02_search.dart';
-import '02_history.dart';
-import 'setting/02_my_account.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -24,8 +24,8 @@ class _HomePage extends State<HomePage>
     return [
       BottomNavigationBarItem(icon: Icon(Icons.sports_soccer ), label: "作成"),
       BottomNavigationBarItem(icon: Icon(Icons.search), label: "検索"),
-      BottomNavigationBarItem(icon: Icon(Icons.folder), label: "履歴"),
-      BottomNavigationBarItem(icon: Icon(Icons.settings), label: "設定"),
+      BottomNavigationBarItem(icon: Icon(Icons.speaker), label: "トーク"),
+      BottomNavigationBarItem(icon: Icon(Icons.sticky_note_2_outlined), label: "管理"),
     ];
   }
 
@@ -59,8 +59,8 @@ class _HomePage extends State<HomePage>
           children: [
             Subscription(),
             Search(),
-            History(),
-            MyAccount(),
+            TeamTalkList(),
+            BatolTicket(),
 
           ]),
 

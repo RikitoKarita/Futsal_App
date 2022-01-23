@@ -23,7 +23,7 @@ class SignUpPage extends StatefulWidget {
   String teamLevelValue = 'チームレベルを選択してください';
   String activeLocation = '主な活動場所を選択してください';
   //ページ3より取得
-  String address = '';
+  String image_path = '';
 
   SignUpPage.make(){
     mail = "";
@@ -31,7 +31,7 @@ class SignUpPage extends StatefulWidget {
     confirm = "";
   }
 
-  SignUpPage.modoru(this.mail, this.password, this.confirm, this.teamName, this.teamLevelValue, this.activeLocation, this.mission, this.address){
+  SignUpPage.modoru(this.mail, this.password, this.confirm, this.teamName, this.teamLevelValue, this.activeLocation, this.mission, this.image_path){
     this.mailController = TextEditingController(text: this.mail);
     this.passwordController = TextEditingController(text: this.password);
     this.confirmController = TextEditingController(text: this.confirm);
@@ -54,7 +54,7 @@ class _SignUpPageState extends State<SignUpPage> {
   late String activeLocation;
 
   //ページ3より
-  late String address;
+  late String image_path;
 
   void initState() {
     mailController = widget.mailController;
@@ -67,7 +67,7 @@ class _SignUpPageState extends State<SignUpPage> {
     mission = widget.mission;
     teamLevelValue = widget.teamLevelValue;
     activeLocation = widget.activeLocation;
-    address = widget.address;
+    image_path = widget.image_path;
   }
 
   @override
@@ -272,7 +272,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                                                     password,
                                                                     confirm,
                                                                     teamName,
-                                                                    teamLevelValue,activeLocation,mission,address),
+                                                                    teamLevelValue,activeLocation,mission,image_path),
                                                           ),
                                                         );
                                                         model.endLoading();

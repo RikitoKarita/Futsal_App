@@ -10,8 +10,7 @@ import './../02_home.dart';
 import './../user_policy/01_user_policy_page.dart';
 
 class SignUpPage3 extends StatelessWidget {
-  var addressCtl = TextEditingController();
-  late String address;
+  late String image_path;
 
   //ページ1より取得
   late String mail;
@@ -24,8 +23,7 @@ class SignUpPage3 extends StatelessWidget {
   late String activeLocation;
 
   SignUpPage3(this.mail, this.password, this.confirm, this.teamName,
-      this.teamLevel, this.activeLocation, this.mission, this.address){
-    addressCtl = TextEditingController(text: this.address);
+      this.teamLevel, this.activeLocation, this.mission, this.image_path){
   }
 
   @override
@@ -116,32 +114,30 @@ class SignUpPage3 extends StatelessWidget {
                                   child: Column(
                                     // mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
-                                      TextFormField(
-                                        controller: addressCtl,
-                                        onChanged: (text) {
-                                          model.changeAddress(text);
-                                        },
-                                        maxLines: 1,
-                                        decoration: InputDecoration(
-                                          errorText: model.errorAddress == ''
-                                              ? null
-                                              : model.errorAddress,
-                                          labelText: '連絡先',
-                                          border: OutlineInputBorder(),
-                                        ),
+                                      Row(
+                                        children: [
+                                          Container(width:100,child: Text('サムネイル')),
+                                          Expanded(
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              child: Container(
+                                                width: 150,
+                                                height: 40,
+                                                child: ElevatedButton(onPressed:() {
+                                                  model.getImageFromGallery();
+                                                }, child: Text('画像を選択')),
+                                              ),
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                      Text(
-                                        '本アプリ利用者には、上記の連絡先が公開されます。\n'
-                                        '公開しても問題ないアカウントをご使用ください。\n'
-                                        'ex）Twitter「@StreeFriend」,Instagram「_friendstree_」\n'
-                                        '',
-                                        style: TextStyle(
-                                            fontSize: 14, color: Colors.red),
-                                      ),
+                                      SizedBox(height: 30,),
+                                      model.imageFile == null ? Container() :
                                       Container(
-                                        padding:
-                                            EdgeInsets.fromLTRB(5, 5, 5, 5),
-                                      ),
+                                          height: 200,
+                                          width: 200,
+                                          child: Image.asset(model.imageFile!.path)),
+                                      SizedBox(height: 30,),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
@@ -213,8 +209,6 @@ class SignUpPage3 extends StatelessWidget {
                                           onPressed: model.agreeGuideline
                                               ? () async {
                                                   model.startLoading();
-                                                  model.changeAddress(addressCtl.text);
-                                                  if(model.isAddressValid) {
                                                     try {
                                                       model.mail = mail;
                                                       model.password = password;
@@ -224,8 +218,6 @@ class SignUpPage3 extends StatelessWidget {
                                                       model.activeLocation =
                                                           activeLocation;
                                                       model.mission = mission;
-                                                      model.address =
-                                                          addressCtl.text;
 
                                                       await model.signUp();
 
@@ -247,11 +239,6 @@ class SignUpPage3 extends StatelessWidget {
                                                           context, e);
                                                       model.endLoading();
                                                     }
-                                                  }else{
-                                                    showTextDialog(
-                                                        context, "連絡先を入力してください");
-                                                    model.endLoading();
-                                                  }
                                                 }
                                               : null,
                                         ),
@@ -270,13 +257,12 @@ class SignUpPage3 extends StatelessWidget {
                                         color: Color(0xFF4CAF50),
                                         textColor: Colors.white,
                                         onPressed: () {
-                                          address = addressCtl.text;
                                           Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   SignUpPage2(this.mail, this.password, this.confirm, this.teamName,
-                                                      this.teamLevel, this.activeLocation, this.mission,this.address),
+                                                      this.teamLevel, this.activeLocation, this.mission,this.image_path),
                                             ),
                                           );
                                         },

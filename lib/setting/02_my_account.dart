@@ -16,35 +16,14 @@ class MyAccount extends StatelessWidget {
         backgroundColor: const Color(0xFFF2FFE4),
         appBar: AppBar(
           title: Text('設定を変更'),
+          backgroundColor: const Color(0xFF3CB371),
         ),
-        drawer: Drawer(
-            child: ListView(
-          children: <Widget>[
-            Container(
-              height: 60.0,
-              child: DrawerHeader(
-                child: Text("メニュー"),
-                decoration: BoxDecoration(),
-              ),
-            ),
-            ListTile(
-              title: Text('利用規約同意書', style: TextStyle(color: Colors.black54)),
-              // onTap: _manualURL,
-            ),
-            ListTile(
-              title: Text('アプリ操作手順書', style: TextStyle(color: Colors.black54)),
-              // onTap: _FAQURL,
-            )
-          ],
-        )),
         body: Consumer<MyAccountModel>(builder: (context, model, child) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Padding(padding: EdgeInsets.only(top: 10.0)),
-              AdBanner(size: AdSize.banner),
               Padding(padding: EdgeInsets.only(top: 10.0)),
               Align(
                   alignment: Alignment.center,
