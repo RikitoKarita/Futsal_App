@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as Firebase_Auth;
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:futsal_develop/common/01_message.dart';
 import 'package:futsal_develop/common/01_team.dart';
@@ -14,6 +15,7 @@ class Firestore {
   static final userRef = _firestoreInstance.collection('user');
   static final roomRef = _firestoreInstance.collection('room');
   static final roomSnapshot = roomRef.snapshots();
+  FirebaseStorage storage = FirebaseStorage.instance;
 
   static final teamRef = _firestoreInstance.collection('TEAM_TBL');
   static final roomTeamRef = _firestoreInstance.collection('TEAM_TALK_ROOM_TBL');
@@ -297,5 +299,12 @@ class Firestore {
   static Stream<QuerySnapshot> messageSnapshot(String roomId) {
     return roomTeamRef.doc(roomId).collection('message').snapshots();
   }
+
+  Future<String> downloadImage(String storedImagePath) async{
+    Reference imageRef = storage.ref(storedImagePath);
+    String imageUrl = await imageRef.getDownloadURL();
+    return imageUrl;
+  }
+
 
 }

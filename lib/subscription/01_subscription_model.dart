@@ -55,7 +55,9 @@ class SubscriptionModel extends ChangeNotifier {
     DateFormat outputFormat =
     DateFormat('yyyy/MM/dd HH:mm');
     this.date = outputFormat.format(now);
-    await uploadImage();
+    if(imageFile !=null){
+      await uploadImage();
+    }
     try {
       await FirebaseFirestore.instance.collection('BATOL_TBL').add(
           {
@@ -82,7 +84,7 @@ class SubscriptionModel extends ChangeNotifier {
   Future<void>getImageFromGallery() async{
     final pickedImage =
     await ImagePicker().pickImage(source: ImageSource.gallery);
-    imageFile = (pickedImage != null ? XFile(pickedImage.path): null)!;
+    imageFile = (pickedImage != null ? XFile(pickedImage.path): null);
     notifyListeners();
   }
 
